@@ -5,9 +5,9 @@ Es una instalación desde cero.
 Esto es necesario cuando queremos usar los algoritmos con patente que no pueden ser distribuidos como paquetes.
 Uno de ellos por ejemplo el filtro de iluminación de ruido `bm3dDenoising`.
 
-Utiliza Miniconda con python 3.7 para crear el paquete `cv2`. Lo instala en el entorno `opencv` de miniconda y además crea un fichero `.whl` para instalar con `pip` en cualquier otro máquina Ubunt 18.04.
+Crea un fichero `.whl` para instalar con `pip` en cualquier otro máquina Ubunt 18.04.
 
-La máquina virtual arranca con 4GB de RAM y el script compila con un único hilo. En el script el número en `make -j1` indica el número de hilos para compilar.
+La máquina virtual arranca con 4GB de RAM y el script compila con hilos. En el script el número en `make -jn` indica el número de hilos para compilar.
 
 ## ¿Qué pasa con el soporte para otras extensiones como  por ejemplo CUDA?
 Desde el directorio de construcción de opencv (`~/opencv/build`) la salida de la ejecución de utilidad `cmake ..` muestra información de cómo OpenCV va a ser construida.

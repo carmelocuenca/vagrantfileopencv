@@ -72,10 +72,10 @@ Vagrant.configure("2") do |config|
     # ccmake .. in order to configure
     apt-get install -y build-essential cmake cmake-gui cmake-curses-gui
     # Installing Miniconda
-    # su vagrant -c 'wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    #   /bin/bash Miniconda3-latest-Linux-x86_64.sh -b -f && \
-    #   source ~/miniconda3/etc/profile.d/conda.sh &&
-    #   conda init'
+    su vagrant -c 'wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+      /bin/bash Miniconda3-latest-Linux-x86_64.sh -b -f && \
+      source ~/miniconda3/etc/profile.d/conda.sh &&
+      conda init'
     # to supoort python3
     apt-get install -y python3-dev python3-numpy
     # GTK support for GUI features
@@ -93,19 +93,11 @@ Vagrant.configure("2") do |config|
     # Downloading OpenCV
     su vagrant -c 'git clone https://github.com/opencv/opencv.git && git clone https://github.com/opencv/opencv_contrib.git'
     # Building OpenCV
-
-    cmake -D PYTHON_EXECUTABLE=~/anaconda3/envs/cvenv2/bin/python
-
     su vagrant -c 'cd opencv && mkdir build && cd build && \
       cmake  -DCMAKE_BUILD_TYPE=RELEASE \
         -DOPENCV_ENABLE_NONFREE=ON \
         -DOPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
-        -DCMAKE_INSTALL_PREFIX=$(python3 -c "import sys; print(sys.prefix)") \
-        -DBUILD_PYTHON_SUPPORT=ON \
-        -DPYTHON3_EXECUTABLE=$(which python3) \
-        -DPYTHON3_INCLUDE_DIR=$(python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
-        -DPYTHON3_PACKAGES_PATH=$(python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") \
-        -DPYTHON_EXECUTABLE=$(which python3) .. && \
+        .. && \
       make -j2 && \
       sudo make install'
     # Generating distribution archives¶

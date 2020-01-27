@@ -71,11 +71,8 @@ Vagrant.configure("2") do |config|
     # Required build dependencies
     # ccmake .. in order to configure
     apt-get install -y build-essential cmake cmake-gui cmake-curses-gui
-    # Installing Miniconda
-    su vagrant -c 'wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-      /bin/bash Miniconda3-latest-Linux-x86_64.sh -b -f && \
-      source ~/miniconda3/etc/profile.d/conda.sh &&
-      conda init'
+    # to supoort python2p
+    apt-get install python-dev python-numpy
     # to supoort python3
     apt-get install -y python3-dev python3-numpy
     # GTK support for GUI features
@@ -91,19 +88,34 @@ Vagrant.configure("2") do |config|
     apt-get install -y libpng-dev libjpeg-dev libopenexr-dev libtiff-dev libwebp-dev libjasper-dev
     apt-get install -y git
     # Downloading OpenCV
-    su vagrant -c 'git clone https://github.com/opencv/opencv.git && git clone https://github.com/opencv/opencv_contrib.git'
+    su vagrant -c 'git clone https://github.com/opencv/opencv.git && \
+      git clone https://github.com/opencv/opencv_contrib.git'
     # Building OpenCV
-    su vagrant -c 'cd opencv && mkdir build && cd build && \
+    su vagrant -c 'cd opencv && mkdir build && cd build && 
       cmake  -DCMAKE_BUILD_TYPE=RELEASE \
         -DOPENCV_ENABLE_NONFREE=ON \
         -DOPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
+        -DBUILD_OPENCV_PYTHON2=OFF
         .. && \
       make -j2 && \
       sudo make install'
-    # Generating distribution archives¶
-    su vagrant -c 'python -m pip install --user --upgrade setuptools wheel && \
-      cd opencv && cd build && cd python_loader && \
-      python setup.py sdist bdist_wheel && \
-       # pip install python_loader/dist/opencv-4.2.0-py3-none-any.whl'
+      # # Installing Miniconda and
+      # su vagrant -c 'wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+      #   /bin/bash Miniconda3-latest-Linux-x86_64.sh -b -f && \
+      #   source ~/miniconda3/etc/profile.d/conda.sh && \
+      #   conda init'
+      # # Setup Conda environment
+      # su vagrant -c ' source ~/miniconda3/etc/profile.d/conda.sh && \
+      #   conda update -y -n base -c defaults conda && \
+      #   conda create -y -n opencv python=3.5'
+      # # Generating distribution archives
+      # su vagrant -c ' \
+      #   source ~/miniconda3/etc/profile.d/conda.sh && \
+      #   conda activate opencv && \
+      #   conda install -y pip cython numpy && \
+      #   python -m pip install --user --upgrade setuptools wheel
+      #   cd ~/opencv && cd build && \
+      #   python python_loader/setup.py sdist bdist_wheel && \
+      #   pip install python_loader/dist/opencv-4.2.0-py3-none-any.whl'
   SHELL
 end
